@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.xsalefter.kb</groupId>
+    <artifactId>kb-oss-parent</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+    <name>kb-oss-parent</name>
+    <licenses>
+        <license>
+            <name>Apache License 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <properties>
+        <kb-commons.version>2.0.0</kb-commons.version>
+        <kb-base.version>3.0.0</kb-base.version>
+        <kb-platform.version>4.0.0</kb-platform.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.xsalefter.kb.commons</groupId>
+                <artifactId>kb-commons</artifactId>
+                <version>${kb-commons.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.xsalefter.kb.base</groupId>
+                <artifactId>kb-base</artifactId>
+                <version>${kb-base.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.xsalefter.kb.platform</groupId>
+                <artifactId>kb-platform</artifactId>
+                <version>${kb-platform.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <repositories>
+        <repository>
+            <id>some-org-kb-poc-751-dev</id>
+            <url>https://dl.cloudsmith.io/public/some-org/kb-poc-751-dev/maven/</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>cloudsmith</id>
+            <url>https://maven.cloudsmith.io/some-org/kb-poc-751-dev/</url>
+        </snapshotRepository>
+        <repository>
+            <id>cloudsmith</id>
+            <url>https://maven.cloudsmith.io/some-org/kb-poc-751-dev/</url>
+        </repository>
+    </distributionManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>3.0.0</version>
+                    <configuration>
+                        <releaseProfiles>release</releaseProfiles>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>
