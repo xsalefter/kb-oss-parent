@@ -21,7 +21,7 @@
   </scm>
   <properties>
     <kb-commons.version>2.0.1</kb-commons.version>
-    <kb-base.version>3.0.0-SNAPSHOT</kb-base.version>
+    <kb-base.version>3.0.1</kb-base.version>
   </properties>
   <dependencyManagement>
     <dependencies>
