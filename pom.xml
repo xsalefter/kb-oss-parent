@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.xsalefter.kb</groupId>
     <artifactId>kb-oss-parent</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>kb-oss-parent</name>
     <licenses>
@@ -17,10 +17,17 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
+
+    <scm>
+        <connection>scm:git:git://github.com/xsalefter/kb-oss-parent.git</connection>
+        <developerConnection>scm:git:git@github.com:xsalefter/kb-oss-parent.git</developerConnection>
+        <tag>HEAD</tag>
+        <url>http://github.com/xsalefter/kb-oss-parent/tree/master</url>
+    </scm>
+
     <properties>
-        <kb-commons.version>2.0.0</kb-commons.version>
-        <kb-base.version>3.0.0</kb-base.version>
-        <kb-platform.version>4.0.0</kb-platform.version>
+        <kb-commons.version>2.0.0-SNAPSHOT</kb-commons.version>
+        <kb-base.version>3.0.0-SNAPSHOT</kb-base.version>
     </properties>
 
     <dependencyManagement>

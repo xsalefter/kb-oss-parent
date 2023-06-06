@@ -1,0 +1,70 @@
+name: release-dispatch
+on:
+  [repository_dispatch]
+
+jobs:
+  update_version_from_repository_dispatch:
+    env:
+      POM_PROPERTY_NAME: ${{github.event.client_payload.property_name}}
+      POM_PROPERTY_VALUE: ${{github.event.client_payload.property_value}}
+    runs-on: ubuntu-22.04
+    # Cannot make env.* works in if statement
+    if: ${{github.event.client_payload.property_name != '' && github.event.client_payload.property_value != ''}}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Print Repository Dispatch Webhook Values
+        run: |
+          echo github.event.client_payload.property_name  : ${POM_PROPERTY_NAME}
+          echo github.event.client_payload.property_value : ${POM_PROPERTY_VALUE}
+          export POM_PROPERTY_NAME
+          export POM_PROPERTY_VALUE
+      - name: Setup git user
+        env:
+          BUILD_USER: ${{ secrets.BUILD_USER }}
+          BUILD_TOKEN: ${{ secrets.BUILD_TOKEN }}
+        run: |
+          git config --global user.email "xsalefter@xsalefter.id"
+          git config --global user.name "xsalefter"
+          git config --global url."https://${BUILD_USER}:${BUILD_TOKEN}@github.com/".insteadOf "git@github.com:"
+      # Always get "Invalid expression: //x:properties/x:${POM_PROPERTY_NAME}" when using Mudlet/xmlstarlet-action@master
+      - name: Install XML Starlet
+        run: sudo apt-get install xmlstarlet
+      - name: Update 'kb-commons.version' in pom.xml file
+        run: xmlstarlet ed --inplace -N x="http://maven.apache.org/POM/4.0.0" -u "//x:properties/x:${POM_PROPERTY_NAME}" -v ${POM_PROPERTY_VALUE} pom.xml
+      - name: Commit Up To Date pom.xml
+        run: |
+          git add pom.xml
+          git commit -m "update ${POM_PROPERTY_NAME} value to ${POM_PROPERTY_VALUE} for pom.xml"
+          git push origin master
+
+  release:
+    name: release kb-oss-parent
+    runs-on: ubuntu-22.04
+    needs: [update_version_from_repository_dispatch]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup git user
+        env:
+          BUILD_USER: ${{ secrets.BUILD_USER }}
+          BUILD_TOKEN: ${{ secrets.BUILD_TOKEN }}
+        run: |
+          git config --global user.email "xsalefter@xsalefter.id"
+          git config --global user.name "xsalefter"
+          git config --global url."https://${BUILD_USER}:${BUILD_TOKEN}@github.com/".insteadOf "git@github.com:"
+      - name: Setup JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: 11
+          distribution: temurin
+      - name: Setup Maven Setting XML
+        uses: s4u/maven-settings-action@v2.8.0
+        with:
+          servers: '[{"id": "cloudsmith", "username": "${{ secrets.CLOUDSMITH_USER }}", "password": "${{ secrets.CLOUDSMITH_API_KEY }}"}]'
+      - name: Pull and Build Project
+        run: |
+          git pull origin master
+          mvn --errors --batch-mode --show-version clean install
+      - name: Deploy artifacts
+        run: mvn release:clean release:prepare release:perform
