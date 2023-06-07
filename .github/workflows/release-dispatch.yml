@@ -38,10 +38,14 @@ jobs:
           git commit -m "update ${POM_PROPERTY_NAME} value to ${POM_PROPERTY_VALUE} for pom.xml"
           git push origin master
 
+  run_ci:
+    needs: [update_version_from_repository_dispatch]
+    uses: xsalefter/kb-oss-parent/.github/workflows/ci.yml@master
+
   release:
     name: release kb-oss-parent
     runs-on: ubuntu-22.04
-    needs: [update_version_from_repository_dispatch]
+    needs: [run_ci]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
