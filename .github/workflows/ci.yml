@@ -1,0 +1,14 @@
+name: ci
+
+on: [workflow_dispatch, workflow_call]
+
+jobs:
+  printing:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Print 1x
+        run: echo Print 1x
+      - name: Print 2x
+        run: echo Print 2x
+      - name: Print 3x
+        run: echo Print 3x
