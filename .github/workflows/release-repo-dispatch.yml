@@ -1,0 +1,22 @@
+name: release-repo-dispatch
+
+on:
+  [repository_dispatch]
+
+jobs:
+  update_version_from_repository_dispatch:
+    name: Call update-version.yml
+    uses: ./.github/workflows/update-version.yml
+
+  run_ci:
+    name: Run ci.yml
+    needs: [update_version_from_repository_dispatch]
+    uses: xsalefter/kb-oss-parent/.github/workflows/ci.yml@master
+
+  release:
+    name: Release kb-oss-parent
+    needs: [run_ci]
+    uses: ./.github/workflows/release.yml
+    secrets:
+      CLOUDSMITH_USER: ${{ secrets.CLOUDSMITH_USER }}
+      CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
