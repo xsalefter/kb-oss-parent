@@ -3,23 +3,26 @@ name: update-version
 on:
   workflow_call:
 
+# No matter how "neat" to have this, accessing variables in GitHub action always inconsistent. See:
+# https://github.com/actions/runner/issues/2372
+# https://github.com/actions/runner/issues/1189
+# https://www.google.com/search?q=Unrecognized+named-value%3A+%27env%27.
+# Lets save our sanity and abandon this.
+# env:
+# POM_PROPERTY_NAME: ${{github.event.client_payload.property_name}}
+# POM_PROPERTY_VALUE: ${{github.event.client_payload.property_value}}
+
 jobs:
   updating_version:
-    env:
-      POM_PROPERTY_NAME: ${{github.event.client_payload.property_name}}
-      POM_PROPERTY_VALUE: ${{github.event.client_payload.property_value}}
     runs-on: ubuntu-22.04
-    # Cannot make env.* works in if statement
     if: ${{github.event.client_payload.property_name != '' && github.event.client_payload.property_value != ''}}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Print Repository Dispatch Webhook Values
         run: |
-          echo github.event.client_payload.property_name  : ${POM_PROPERTY_NAME}
-          echo github.event.client_payload.property_value : ${POM_PROPERTY_VALUE}
-          export POM_PROPERTY_NAME
-          export POM_PROPERTY_VALUE
+          echo github.event.client_payload.property_name  : ${{github.event.client_payload.property_name}}
+          echo github.event.client_payload.property_value : ${{github.event.client_payload.property_value}}
       - name: Setup git user
         env:
           BUILD_USER: ${{ secrets.BUILD_USER }}
@@ -28,13 +31,12 @@ jobs:
           git config --global user.email "xsalefter@xsalefter.id"
           git config --global user.name "xsalefter"
           git config --global url."https://${BUILD_USER}:${BUILD_TOKEN}@github.com/".insteadOf "git@github.com:"
-      # Always get "Invalid expression: //x:properties/x:${POM_PROPERTY_NAME}" when using Mudlet/xmlstarlet-action@master
       - name: Install XML Starlet
         run: sudo apt-get install xmlstarlet
-      - name: Update 'kb-commons.version' in pom.xml file
-        run: xmlstarlet ed --inplace -N x="http://maven.apache.org/POM/4.0.0" -u "//x:properties/x:${POM_PROPERTY_NAME}" -v ${POM_PROPERTY_VALUE} pom.xml
+      - name: Update ${{github.event.client_payload.property_name}} in pom.xml file
+        run: xmlstarlet ed --inplace -N x="http://maven.apache.org/POM/4.0.0" -u "//x:properties/x:${{github.event.client_payload.property_name}}" -v ${{github.event.client_payload.property_value}} pom.xml
       - name: Commit Up To Date pom.xml
         run: |
           git add pom.xml
-          git commit -m "update ${POM_PROPERTY_NAME} value to ${POM_PROPERTY_VALUE} for pom.xml"
+          git commit -m "update ${{github.event.client_payload.property_name}} value to ${{github.event.client_payload.property_value}} for pom.xml"
           git push origin master
