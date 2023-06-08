@@ -20,7 +20,7 @@
     <url>http://github.com/xsalefter/kb-oss-parent/tree/master</url>
   </scm>
   <properties>
-    <kb-commons.version>2.0.6</kb-commons.version>
+    <kb-commons.version>2.0.7</kb-commons.version>
     <kb-base.version>3.0.7</kb-base.version>
   </properties>
   <dependencyManagement>
