@@ -38,5 +38,5 @@ jobs:
       - name: Commit Up To Date pom.xml
         run: |
           git add pom.xml
-          git commit -m "update ${{github.event.client_payload.property_name}} value to ${{github.event.client_payload.property_value}} for pom.xml"
+          git commit -m "[github-action] update ${{github.event.client_payload.property_name}} value to ${{github.event.client_payload.property_value}}"
           git push origin master
