@@ -1,0 +1,26 @@
+name: include-to-ci
+
+on:
+  workflow_dispatch:
+    inputs:
+      hello:
+        description: 'Hello message:'
+        type: string
+      print_hello:
+        description: 'Should the Hello get printed?'
+        type: boolean
+        required: true
+  workflow_call:
+
+jobs:
+  printing_include:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Print
+        run: |
+          should_print=${{github.event.inputs.print_hello}}
+          if [ "$should_print" = true ]; then
+            echo ${{github.event.inputs.hello}}
+          else
+            echo 'Hello not printed.'
+          fi

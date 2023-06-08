@@ -12,3 +12,5 @@ jobs:
         run: echo Print 2x
       - name: Print 3x
         run: echo Print 3x
+  call-include:
+    uses: ./.github/workflows/include-to-ci.yml
