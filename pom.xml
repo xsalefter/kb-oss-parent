@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.xsalefter.kb</groupId>
   <artifactId>kb-oss-parent</artifactId>
-  <version>1.0.6</version>
+  <version>1.0.7-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>kb-oss-parent</name>
   <licenses>
@@ -16,7 +16,7 @@
   <scm>
     <connection>scm:git:git://github.com/xsalefter/kb-oss-parent.git</connection>
     <developerConnection>scm:git:git@github.com:xsalefter/kb-oss-parent.git</developerConnection>
-    <tag>kb-oss-parent-1.0.6</tag>
+    <tag>HEAD</tag>
     <url>http://github.com/xsalefter/kb-oss-parent/tree/master</url>
   </scm>
   <properties>
