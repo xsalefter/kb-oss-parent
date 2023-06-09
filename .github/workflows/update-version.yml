@@ -15,7 +15,9 @@ on:
 jobs:
   updating_version:
     runs-on: ubuntu-22.04
-    if: ${{github.event.client_payload.property_name != '' && github.event.client_payload.property_value != ''}}
+    if: github.event.client_payload.property_name != '' && 
+        github.event.client_payload.property_value != '' && 
+        contains(fromJSON('["kb-commons.version", "kb-base.version"]'), github.event.client_payload.property_name)
     steps:
       - name: Checkout
         uses: actions/checkout@v3
