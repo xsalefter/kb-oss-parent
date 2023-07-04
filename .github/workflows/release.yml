@@ -1,5 +1,8 @@
 name: release
+
 on:
+  repository_dispatch:
+    types: [update_base_version, update_commons_version]
   workflow_dispatch:
   workflow_call:
     secrets:
@@ -7,6 +10,11 @@ on:
         required: true
       CLOUDSMITH_API_KEY:
         required: true
+
+env:
+  IS_VALID_REPOSITORY_DISPATCH: ${{github.event.client_payload.property_name != '' && 
+                                   github.event.client_payload.property_value != '' && 
+                                   contains(fromJSON('["kb-commons.version", "kb-base.version"]'), github.event.client_payload.property_name)}}
 
 jobs:
   release:
@@ -23,6 +31,7 @@ jobs:
           git config --global user.email "xsalefter@xsalefter.id"
           git config --global user.name "xsalefter"
           git config --global url."https://${BUILD_USER}:${BUILD_TOKEN}@github.com/".insteadOf "git@github.com:"
+          echo $IS_VALID_REPOSITORY_DISPATCH
       - name: Setup JDK
         uses: actions/setup-java@v3
         with:
@@ -32,6 +41,15 @@ jobs:
         uses: s4u/maven-settings-action@v2.8.0
         with:
           servers: '[{"id": "cloudsmith", "username": "${{ secrets.CLOUDSMITH_USER }}", "password": "${{ secrets.CLOUDSMITH_API_KEY }}"}]'
+      - name: Install XML Scarlett
+        run: sudo apt-get install xmlstarlet
+      - name: Update ${{github.event.client_payload.property_name}} in pom.xml file, Commit, and Push
+        if: ${{env.IS_VALID_REPOSITORY_DISPATCH}}
+        run: |
+          xmlstarlet ed --inplace -N x="http://maven.apache.org/POM/4.0.0" -u "//x:properties/x:${{github.event.client_payload.property_name}}" -v ${{github.event.client_payload.property_value}} pom.xml
+          git add pom.xml
+          git commit -m "[github-action] update ${{github.event.client_payload.property_name}} value to ${{github.event.client_payload.property_value}}"
+          git push origin master
       - name: Pull and Build Project
         run: |
           git pull origin master
