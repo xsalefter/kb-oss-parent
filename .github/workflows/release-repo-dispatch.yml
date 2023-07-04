@@ -1,7 +1,7 @@
 name: release-repo-dispatch
 
 on:
-  # Temporary update, so that this workflow not triggered by webhook
+  # Temporary update, so that this workflow not triggered by webhook. Originally, this value is "repository_dispatch"
   workflow_call:
 
 jobs:
