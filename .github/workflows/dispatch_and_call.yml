@@ -1,0 +1,34 @@
+name: dispatch and call
+
+# Demo to show that inputs in workflow dispatch and workflow call could be used together.
+
+on:
+  workflow_dispatch:
+    inputs:
+      hello-msg:
+        description: "Hello Message"
+        type: string
+        required: false
+      is-exist:
+        description: "Is Exist"
+        type: boolean
+        required: false
+  workflow_call:
+    inputs:
+      hello-msg:
+        description: "Hello Message"
+        type: string
+        required: false
+      is-exist:
+        description: "Is Exist"
+        type: boolean
+        required: false
+
+jobs:
+  dispatch-and-call-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print input
+        run: |
+          echo "Hello msg: ${{github.event.inputs.hello-msg}}, exist: ${{github.event.inputs.is-exist}}"
+      
