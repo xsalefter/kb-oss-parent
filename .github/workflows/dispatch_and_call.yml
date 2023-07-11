@@ -3,26 +3,20 @@ name: dispatch and call
 # Demo to show that inputs in workflow dispatch and workflow call could be used together.
 
 on:
+  repository_dispatch:
+    types: [repository_workflow_together]
   workflow_dispatch:
     inputs:
       hello-msg:
         description: "Hello Message"
         type: string
         required: false
+        default: ${{ github.event.client_payload.hello-msg }}
       is-exist:
         description: "Is Exist"
         type: boolean
         required: false
-  workflow_call:
-    inputs:
-      hello-msg:
-        description: "Hello Message"
-        type: string
-        required: false
-      is-exist:
-        description: "Is Exist"
-        type: boolean
-        required: false
+        default: ${{ github.event.client_payload.is-exist }}
 
 jobs:
   dispatch-and-call-job:
