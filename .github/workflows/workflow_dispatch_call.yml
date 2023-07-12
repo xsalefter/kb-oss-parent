@@ -1,10 +1,8 @@
-name: dispatch and call
+name: workflow dispatch call
 
-# Demo to show that inputs in workflow dispatch and workflow call could be used together.
+# Demo call workflow dispatch using webhook
 
 on:
-  repository_dispatch:
-    types: [repository_workflow_together]
   workflow_dispatch:
     inputs:
       hello-msg:
