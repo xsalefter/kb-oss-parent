@@ -52,7 +52,7 @@ The `repository_dispatch` event in this repository defined by [release-dispatch.
 How to create Personal Access Token:
 - Go to your [developer settings](https://github.com/settings/apps), and then `-> Personal Access Token -> Fine-grained Tokens`.
 - Click "generate new token" button, and configure it so that have an access like in the picture below.
-- Set `metadata:read` and `contents:read&write` (note that `contents` permission in screenshot labeled as `code`).
+- Set `metadata:read`, `actions:read&write` and `contents:read&write` (note that `contents` permission in screenshot labeled as `code`).
 - This PAT need to set in each GitHub Action's secrets in each repository that send an event
   (For example, see line: `GITHUB_TOKEN: ${{ secrets.GH_SECRET }}` in `kb-commons/.github/workflows/release.yml`).
 
