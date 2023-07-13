@@ -49,12 +49,12 @@ This workflow contains all steps as [Use GitHub Action](#optional-use-github-act
 
 The `repository_dispatch` event in this repository defined by [release-dispatch.yml](https://github.com/xsalefter/kb-oss-parent/blob/master/.github/workflows/release-dispatch.yml) file. Note that `repository_dispatch` needs Personal Access Token 
 
-How to create Personal Access Token:
+To create Personal Access Token:
 - Go to your [developer settings](https://github.com/settings/apps), and then `-> Personal Access Token -> Fine-grained Tokens`.
 - Click "generate new token" button, and configure it so that have an access like in the picture below.
 - Set `metadata:read`, `actions:read&write` and `contents:read&write` (note that `contents` permission in screenshot labeled as `code`).
-- This PAT need to set in each GitHub Action's secrets in each repository that send an event
-  (For example, see line: `GITHUB_TOKEN: ${{ secrets.GH_SECRET }}` in `kb-commons/.github/workflows/release.yml`).
+- Put this PAT to each involved repositories secret. Set: `Settings -> Secrets & Variables -> Actions -> "New Repository Secret" button`
+- This variables will be available in workflow (For example, see line: `GH_WORKFLOW_PAT: ${{ secrets.GH_WORKFLOW_PAT }}` in `kb-commons/.github/workflows/release.yml`).
 
 If everything set successfully, executing `release` with `send_repository_dispatch=yes` action will in `kb-commons` or 
 `kb-base` will update `kb-commons.version` or `kb-base.version` in `kb-oss-parent/pom.xml` file.
